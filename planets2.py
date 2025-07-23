@@ -19,7 +19,6 @@ class Planet:
 
     def move(self, elapsed):
         self.pos += self.vel * elapsed
-        # self.pos = vec_add(self.pos, vec_mult(elapsed, self.vel))
 
 class MyGameWindow(arcade.Window):
     """
@@ -66,32 +65,15 @@ class MyGameWindow(arcade.Window):
                 if i != j:
                     p1 = self.planets[i]
                     p2 = self.planets[j]
-                    # in this original code, all vectors are tuples
                     dv = p2.pos - p1.pos
                     d = dv.magnitude()
                     force = p1.mass * p2.mass * GRAVITY / (d**2)
-                    df1 = dv.normalize()*(force/p1.mass)
-                    df2 = dv.normalize()*(force/p2.mass)
+                    df1 = dv.normalize() * (force / p1.mass)
                     if d > 25:
                         p1.vel = p1.vel+df1
-                        p2.vel = p2.vel+df2
 
         for p in self.planets:
             p.move(elapsed_time)
-
-
-    # def on_key_press(self, key, modifiers):
-    #     """
-    #     Called whenever a key is pressed.
-    #     """
-    #     if key == arcade.key.LEFT:
-    #         self.player_x -= self.player_speed
-    #     elif key == arcade.key.RIGHT:
-    #         self.player_x += self.player_speed
-    #     elif key == arcade.key.UP:
-    #         self.player_y += self.player_speed
-    #     elif key == arcade.key.DOWN:
-    #         self.player_y -= self.player_speed
 
     def on_key_release(self, key, modifiers):
         """
