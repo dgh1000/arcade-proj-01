@@ -22,6 +22,7 @@ class Planet:
 
 class MyGameWindow(arcade.Window):
     """
+    Here's a note.
     Main application class that inherits directly from arcade.Window.
     This class will handle all drawing and updating logic.
     """
