@@ -9,16 +9,17 @@ GRAVITY = 25
 
 class Planet:
     def __init__(self, x, y, mass):
-        self.pos = (x, y)
+        self.pos = Vector(x, y)
         self.mass = mass
-        self.vel = (0, 0)
+        self.vel = Vector(0, 0)
 
     def draw(self):
-        x, y = self.pos
+        x, y = (self.pos.x, self.pos.y)
         arcade.draw_circle_filled(center_x=x, center_y=y, radius=20, color=arcade.color.BLUE)
 
     def move(self, elapsed):
-        self.pos = vec_add(self.pos, vec_mult(elapsed, self.vel))
+        self.pos += self.vel * elapsed
+        # self.pos = vec_add(self.pos, vec_mult(elapsed, self.vel))
 
 class MyGameWindow(arcade.Window):
     """
@@ -39,9 +40,9 @@ class MyGameWindow(arcade.Window):
 
         # Initialize game state variables
         planet1 = Planet(SCREEN_WIDTH // 2 + 150, SCREEN_HEIGHT // 2 + 10, 5)
-        planet1.vel = (0, 50)
+        planet1.vel = Vector(0, 50)
         planet2 = Planet(SCREEN_WIDTH // 2 - 150, SCREEN_HEIGHT // 2 - 40, 5)
-        planet2.vel = (0, -50)
+        planet2.vel = Vector(0, -50)
         planet3 = Planet(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, 500)
         self.planets = [planet1, planet2, planet3]
 
@@ -65,14 +66,15 @@ class MyGameWindow(arcade.Window):
                 if i != j:
                     p1 = self.planets[i]
                     p2 = self.planets[j]
-                    dv = vec_sub(p2.pos, p1.pos)
-                    d = vec_mag(dv)
+                    # in this original code, all vectors are tuples
+                    dv = p2.pos - p1.pos
+                    d = dv.magnitude()
                     force = p1.mass * p2.mass * GRAVITY / (d**2)
-                    df1 = vec_mult(force/p1.mass, vec_norm(dv))
-                    df2 = vec_mult(force/p2.mass, vec_norm(dv))
+                    df1 = dv.normalize()*(force/p1.mass)
+                    df2 = dv.normalize()*(force/p2.mass)
                     if d > 25:
-                        p1.vel = vec_add(p1.vel, df1)
-                        p2.vel = vec_sub(p2.vel, df2)
+                        p1.vel = p1.vel+df1
+                        p2.vel = p2.vel+df2
 
         for p in self.planets:
             p.move(elapsed_time)

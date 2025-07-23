@@ -20,6 +20,33 @@ def scale_limit(x1, x2, x3, y1, y2):
         else:
             return value
 
+class Vector:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+
+    def __str__(self):
+        return f"x is {self.x}, y is {self.y}"
+    
+    def __add__(self, other):
+        return Vector(self.x + other.x, self.y + other.y)
+    
+    def __mul__(self, scalar):
+        if isinstance(scalar, float):
+            return Vector(self.x*scalar, self.y*scalar)
+        else:
+            raise TypeError("rhs must be a float")
+        
+    def __sub__(self, other):
+        return Vector(self.x - other.x, self.y - other.y)
+
+    def normalize(self):
+        mag = self.magnitude()
+        return Vector(self.x/mag, self.y/mag)
+
+    def magnitude(self):
+        return (self.x**2 + self.y**2)**0.5
+
 def vec_norm(vec):
     x, y = vec
     d = math.sqrt(x**2 + y**2)
