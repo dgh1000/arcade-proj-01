@@ -4,7 +4,7 @@ from util import *
 # Define screen dimensions
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
-SCREEN_TITLE = "Arcade View Ex"
+SCREEN_TITLE = "Good Arcade View Ex"
 GRAVITY = 25
 
 class Planet:
