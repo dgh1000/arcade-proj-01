@@ -23,7 +23,7 @@ class Planet:
 
 # --- Main Menu View ---
 class MainMenuView(arcade.View):
-    def on_show(self):
+    def on_show_view(self):
         arcade.set_background_color(arcade.color.AZURE)
 
     def on_draw(self):
@@ -40,15 +40,18 @@ class MainMenuView(arcade.View):
 # --- Game View ---
 class GameView(arcade.View):
 
-    
-    def on_show(self):
-        arcade.set_background_color(arcade.color.WHITE)
+    def __init__(self):
+        super().__init__()
         planet1 = Planet(SCREEN_WIDTH // 2 + 150, SCREEN_HEIGHT // 2 + 10, 5)
         planet1.vel = (0, 50)
         planet2 = Planet(SCREEN_WIDTH // 2 - 150, SCREEN_HEIGHT // 2 - 40, 5)
         planet2.vel = (0, -50)
         planet3 = Planet(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, 500)
         self.planets = [planet1, planet2, planet3]
+
+    
+    def on_show_view(self):
+        arcade.set_background_color(arcade.color.WHITE)
 
     def on_update(self, elapsed_time):
         for i in range(len(self.planets)):
@@ -86,6 +89,7 @@ class GameView(arcade.View):
 def main():
     window = arcade.Window(SCREEN_WIDTH, SCREEN_HEIGHT, SCREEN_TITLE)
     menu_view = MainMenuView()
+    game_view = GameView()
     window.show_view(menu_view)
     arcade.run()
 
