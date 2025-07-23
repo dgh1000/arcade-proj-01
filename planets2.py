@@ -4,7 +4,7 @@ from util import *
 # Define screen dimensions
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
-SCREEN_TITLE = "Good Arcade View Ex"
+SCREEN_TITLE = "Bad Arcade View Ex"
 GRAVITY = 25
 
 class Planet:
@@ -22,7 +22,6 @@ class Planet:
 
 class MyGameWindow(arcade.Window):
     """
-    Here's a note.
     Here's another note.
     Main application class that inherits directly from arcade.Window.
     This class will handle all drawing and updating logic.
