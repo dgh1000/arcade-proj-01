@@ -46,6 +46,9 @@ class Vector:
 
     def magnitude(self):
         return (self.x**2 + self.y**2)**0.5
+    
+    def __copy__(self):
+        return Vector(self.x, self.y)
 
 def vec_norm(vec):
     x, y = vec

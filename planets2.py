@@ -1,5 +1,6 @@
 import arcade
 from util import *
+from copy import copy
 
 # Define screen dimensions
 SCREEN_WIDTH = 800
@@ -8,18 +9,44 @@ SCREEN_TITLE = "Bad Arcade View Ex"
 GRAVITY = 25
 
 class Planet:
-    def __init__(self, x, y, mass):
+    def __init__(self, x, y, mass, color):
         self.pos = Vector(x, y)
         self.mass = mass
         self.vel = Vector(0, 0)
+        self.color = color
+        self.lastpos = []
 
     def draw(self):
         x, y = (self.pos.x, self.pos.y)
-        arcade.draw_circle_filled(center_x=x, center_y=y, radius=20, color=arcade.color.BLUE)
+        # self.vel is current velocity as vector. find velocity as a scalar
+        # x and y component. magnitude of the vector
+        # not tracking the color as its on variable
+        # we're not incrementing or decrementing it when the speed changes
+        s = self.vel.magnitude()
+        # compute a green component of the color
+        r = int(s)
+        c = (r,5,5)
+
+        arcade.draw_circle_filled(center_x=x, center_y=y, radius=20, color=c)
+        # for pos in self.lastpos:
+        #     x = pos.x
+        #     y = pos.y
+        #     arcade.draw_circle_filled(center_x=x, center_y=y, radius=10, color=arcade.color.GRAY)
 
     def move(self, elapsed):
+        # keep track of last three positions by saving self.pos first
+        # a list to keep track of these positions
+            
+        self.lastpos.append(copy(self.pos))
+        if len(self.lastpos) > 20:
+            del self.lastpos[0]
         self.pos += self.vel * elapsed
 
+    def set_vel(self, vel):
+        self.vel = vel
+
+# inherits from a class provided by the game engine
+# we're making a game that has a main window
 class MyGameWindow(arcade.Window):
     """
     Here's another note.
@@ -38,11 +65,11 @@ class MyGameWindow(arcade.Window):
         arcade.set_background_color(arcade.color.WHITE)
 
         # Initialize game state variables
-        planet1 = Planet(SCREEN_WIDTH // 2 + 150, SCREEN_HEIGHT // 2 + 10, 5)
+        planet1 = Planet(SCREEN_WIDTH // 2 + 150, SCREEN_HEIGHT // 2 + 10, 5, arcade.color.BLUE)
         planet1.vel = Vector(0, 50)
-        planet2 = Planet(SCREEN_WIDTH // 2 - 150, SCREEN_HEIGHT // 2 - 40, 5)
+        planet2 = Planet(SCREEN_WIDTH // 2 - 150, SCREEN_HEIGHT // 2 - 40, 5, arcade.color.RED)
         planet2.vel = Vector(0, -50)
-        planet3 = Planet(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, 500)
+        planet3 = Planet(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, 500, arcade.color.ORANGE)
         self.planets = [planet1, planet2, planet3]
 
     def on_draw(self):
@@ -51,7 +78,7 @@ class MyGameWindow(arcade.Window):
         This is where all the drawing commands go.
         """
         # Clear the screen to the background color
-        self.clear()
+        # self.clear()
         for p in self.planets:
             p.draw()
 
@@ -70,7 +97,7 @@ class MyGameWindow(arcade.Window):
                     force = p1.mass * p2.mass * GRAVITY / (d**2)
                     df1 = dv.normalize() * (force / p1.mass)
                     if d > 25:
-                        p1.vel = p1.vel+df1
+                        p1.set_vel(p1.vel+df1)
 
         for p in self.planets:
             p.move(elapsed_time)
