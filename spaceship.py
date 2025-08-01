@@ -10,6 +10,16 @@ WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 WINDOW_TITLE = "Spaceship Example"
 
+class Bullet:
+
+    def __init__(self, sprite, angle):
+        self.sprite = sprite
+        self.angle = angle
+
+    
+    def update(self):
+        pass
+
 
 class GameView(arcade.View):
 
@@ -20,9 +30,11 @@ class GameView(arcade.View):
 
         # Variables that will hold sprite lists
         self.spaceship_list = None
+        self.bullet_list = None
 
         # Create a variable to hold the player sprite
         self.spaceship_sprite = None
+        self.bullet_sprite = None
 
         # Hide the mouse cursor while it's over the window
         self.window.set_mouse_visible(False)
@@ -37,14 +49,18 @@ class GameView(arcade.View):
         """ Set up the game and initialize the variables. """
 
         # Create the sprite lists
-        self.spaceship_list = arcade.SpriteList()
 
-        # Set up the player
-        # Character image from kenney.nl
-        img = "spaceship.png"
-        self.spaceship_sprite = arcade.Sprite(img, scale=0.1)
+        # Set up the spaceship
+        self.spaceship_sprite = arcade.Sprite("spaceship.png", scale=0.1)
         self.spaceship_sprite.position = WINDOW_WIDTH//2, WINDOW_HEIGHT//2
+        self.spaceship_list = arcade.SpriteList()
         self.spaceship_list.append(self.spaceship_sprite)
+
+        # Set up the bullet
+        self.bullet_sprite = arcade.Sprite("bullet.png", scale=0.2)
+        self.bullet_sprite.position = 400, 400
+        self.bullet_list = arcade.SpriteList()
+        self.bullet_list.append(self.bullet_sprite)
 
 
     def on_draw(self):
@@ -55,6 +71,7 @@ class GameView(arcade.View):
 
         # Draw the sprites
         self.spaceship_list.draw()
+        self.bullet_list.draw()
 
     def on_update(self, delta_time):
         """ Movement and game logic """
@@ -70,7 +87,8 @@ class GameView(arcade.View):
 
     def on_key_release(self, key, modifier):
         self.keys_down.remove(key)
-    
+
+
 def main():
     """ Main function """
     # Create a window class. This is what actually shows up on screen
