@@ -65,9 +65,9 @@ class MyGameWindow(arcade.Window):
         arcade.set_background_color(arcade.color.WHITE)
 
         # Initialize game state variables
-        planet1 = Planet(SCREEN_WIDTH // 2 + 150, SCREEN_HEIGHT // 2 + 10, 50)
+        planet1 = Planet(SCREEN_WIDTH // 2 + 150, SCREEN_HEIGHT // 2 + 10, 50, arcade.color.BLUE)
         planet1.vel = Vector(0, 50)
-        planet2 = Planet(SCREEN_WIDTH // 2 - 150, SCREEN_HEIGHT // 2 - 40, 50)
+        planet2 = Planet(SCREEN_WIDTH // 2 - 150, SCREEN_HEIGHT // 2 - 40, 50, arcade.color.RED)
         planet2.vel = Vector(0, -50)
         planet3 = Planet(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2, 500, arcade.color.ORANGE)
         self.planets = [planet1, planet2, planet3]

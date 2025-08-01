@@ -37,7 +37,7 @@ class MyGameWindow(arcade.Window):
         """
         # Clear the screen to the background color
         self.clear()
-        arcade.draw_xywh_rectangle_filled(self.pos.x, self.pos.y, 20, 20, arcade.color.BLUE)
+        arcade.draw_lbwh_rectangle_filled(self.pos.x, self.pos.y, 20, 20, arcade.color.BLUE)
 
     def on_update(self, elapsed_time):
         """

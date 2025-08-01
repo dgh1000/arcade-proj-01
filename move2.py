@@ -38,7 +38,7 @@ class MyGameWindow(arcade.Window):
         """
         # Clear the screen to the background color
         self.clear()
-        arcade.draw_xywh_rectangle_filled(self.pos.x, self.pos.y, 20, 20, arcade.color.BLUE)
+        arcade.draw_lbwh_rectangle_filled(self.pos.x, self.pos.y, 20, 20, arcade.color.BLUE)
 
     def on_update(self, elapsed_time):
         """
@@ -46,13 +46,13 @@ class MyGameWindow(arcade.Window):
         'delta_time' is the time in seconds since the last update.
         """
         if arcade.key.UP in self.keys_down:
-            self.pos += Vector(0, 1)
+            self.pos += Vector(0, 2)
         elif arcade.key.DOWN in self.keys_down:
-            self.pos += Vector(0, -1)
+            self.pos += Vector(0, -2)
         elif arcade.key.RIGHT in self.keys_down:
-            self.pos += Vector(1, 0)
+            self.pos += Vector(2, 0)
         elif arcade.key.LEFT in self.keys_down:
-            self.pos += Vector(-1, 0)
+            self.pos += Vector(-2, 0)
         
 
     def on_key_press(self, key, modifiers):
