@@ -22,10 +22,11 @@ def main():
     v1 = Vector(0, 0)
     v2 = Vector(3, 4)
     v3 = v1-v2
-    car1 = Car(50)
-    # is car2 an instance of Car? yes
-    car2 = Honda(25, "red")
-    print(car2.gallons_per_mile())
+    print(v3)
+    # car1 = Car(50)
+    # # is car2 an instance of Car? yes
+    # car2 = Honda(25, "red")
+    # print(car2.gallons_per_mile())
 
     # dog : class of all dogs
     # Poodle: sub class of dogs. only some dogs
