@@ -55,6 +55,7 @@ class GameView(arcade.View):
         self.keys_down = set()
         self.angle = 0
         self.count = 0
+        self.lives = 0
 
     def setup(self):
         """ Set up the game and initialize the variables. """
@@ -70,15 +71,14 @@ class GameView(arcade.View):
         # Set up the bullet
         # self.bullet_sprite = Bullet((WINDOW_WIDTH//2, WINDOW_HEIGHT//2), 0, 1)  # arcade.Sprite("bullet.png", scale=0.2)
         self.bullet_list = arcade.SpriteList()
-        # self.bullet_list.append(self.bullet_sprite)
 
         # asteroid list
         self.asteroid_list = arcade.SpriteList()
         
     def new_bullet(self):
-        angle_radians = (self.spaceship_sprite.angle-90)*math.pi/180
-        vel_x = 1 * math.cos(angle_radians)
-        vel_y = -1 * math.sin(angle_radians)
+        angle_radians = (-self.spaceship_sprite.angle+90)*math.pi/180
+        vel_x = 3 * math.cos(angle_radians)
+        vel_y = 3 * math.sin(angle_radians)
         x, y = self.spaceship_sprite.position
         self.bullet_list.append(Movable("bullet.png", (x, y), vel_x, vel_y))
 
@@ -103,7 +103,7 @@ class GameView(arcade.View):
             self.angle += 2
         self.spaceship_sprite.angle = self.angle
 
-    def check_collisions(self):
+    def check_bullet_collisions(self):
         need_removal = []
         for asteroid in self.asteroid_list:
             collisions = arcade.check_for_collision_with_list(asteroid, self.bullet_list)
@@ -114,28 +114,42 @@ class GameView(arcade.View):
         for remove in need_removal:
             remove.remove_from_sprite_lists()
 
+    def check_spaceship_collisions(self):
+        collisions = arcade.check_for_collision_with_list(self.spaceship_sprite, self.asteroid_list)
+        for asteroid in collisions:
+            asteroid.remove_from_sprite_lists()
+            self.lives -= 1
+
     def on_draw(self):
         """ Draw everything """
         # Clear the screen to only show the background color
         self.clear()
+        arcade.draw_text(f"Lives: {self.lives}", 10, WINDOW_HEIGHT-30, arcade.color.WHITE, font_size=20)
         # Draw the sprites
         self.spaceship_list.draw()
         self.bullet_list.draw()
         self.asteroid_list.draw()
+        if self.lives == 0:
+            arcade.draw_text("GAME OVER", WINDOW_WIDTH//2, WINDOW_HEIGHT//2, arcade.color.RED, font_size=50, anchor_x="center", anchor_y="center")
 
     def on_update(self, delta_time):
         """ Movement and game logic """
-        self.count += 1
-        if self.count % 120 == 0:
-            # print("check")
-            self.new_asteroid()
-        self.spaceship_update()
-        self.bullet_list.update()
-        self.asteroid_list.update()
-        self.check_collisions()
+        if self.lives != 0:
+            self.count += 1
+            if self.count % 120 == 0:
+                # print("check")
+                self.new_asteroid()
+            self.spaceship_update()
+            self.bullet_list.update()
+            self.asteroid_list.update()
+            self.check_bullet_collisions()
+            self.check_spaceship_collisions()
+
 
     def on_key_press(self, key, modifier):
-        if key == arcade.key.SPACE:
+        if key == arcade.key.ESCAPE:
+            arcade.exit()
+        elif key == arcade.key.SPACE:
             self.new_bullet()
         else:
             self.keys_down.add(key)
