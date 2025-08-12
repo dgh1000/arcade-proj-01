@@ -34,6 +34,7 @@ class Movable(arcade.Sprite):
             self.kill()
             return
         self.position = (self.vel_x+x, self.vel_y+y)
+
 class GameView(arcade.View):
 
     def __init__(self):
@@ -55,6 +56,7 @@ class GameView(arcade.View):
         self.keys_down = set()
         self.angle = 0
         self.count = 0
+        self.alive = True
 
     def setup(self):
         """ Set up the game and initialize the variables. """
@@ -76,9 +78,9 @@ class GameView(arcade.View):
         self.asteroid_list = arcade.SpriteList()
         
     def new_bullet(self):
-        angle_radians = (self.spaceship_sprite.angle-90)*math.pi/180
-        vel_x = 1 * math.cos(angle_radians)
-        vel_y = -1 * math.sin(angle_radians)
+        angle_radians = (90-self.spaceship_sprite.angle)*math.pi/180
+        vel_x = 2 * math.cos(angle_radians)
+        vel_y = 2 * math.sin(angle_radians)
         x, y = self.spaceship_sprite.position
         self.bullet_list.append(Movable("bullet.png", (x, y), vel_x, vel_y))
 
@@ -103,12 +105,16 @@ class GameView(arcade.View):
             self.angle += 2
         self.spaceship_sprite.angle = self.angle
 
-    def check_collisions(self):
+    def check_spaceship_collision(self):
+        if arcade.check_for_collision_with_list(self.spaceship_sprite, self.asteroid_list):
+            self.alive = False
+
+    def check_bullet_collisions(self):
         need_removal = []
         for asteroid in self.asteroid_list:
             collisions = arcade.check_for_collision_with_list(asteroid, self.bullet_list)
             for bullet in collisions:
-                print(f"Bullet hit asteroid! asteroid at {asteroid.center_x}, {asteroid.center_y}, Bullet at {bullet.center_x}, {bullet.center_y}")
+                # print(f"Bullet hit asteroid! asteroid at {asteroid.center_x}, {asteroid.center_y}, Bullet at {bullet.center_x}, {bullet.center_y}")
                 need_removal.append(asteroid)
                 need_removal.append(bullet)
         for remove in need_removal:
@@ -122,9 +128,18 @@ class GameView(arcade.View):
         self.spaceship_list.draw()
         self.bullet_list.draw()
         self.asteroid_list.draw()
+        if not self.alive:
+            text_x = WINDOW_WIDTH // 2
+            text_y = WINDOW_HEIGHT - 100
+            arcade.draw_text("you died, sorry about that", 
+                             text_x, text_y, arcade.color.WHITE,
+                             font_size = 30,
+                             font_name = "Arial")
 
     def on_update(self, delta_time):
         """ Movement and game logic """
+        if not self.alive:
+            return
         self.count += 1
         if self.count % 120 == 0:
             # print("check")
@@ -132,11 +147,14 @@ class GameView(arcade.View):
         self.spaceship_update()
         self.bullet_list.update()
         self.asteroid_list.update()
-        self.check_collisions()
+        self.check_bullet_collisions()
+        self.check_spaceship_collision()
 
     def on_key_press(self, key, modifier):
         if key == arcade.key.SPACE:
             self.new_bullet()
+        elif key == arcade.key.ESCAPE:
+            arcade.exit()
         else:
             self.keys_down.add(key)
 
