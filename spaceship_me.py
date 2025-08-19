@@ -20,8 +20,8 @@ WINDOW_TITLE = "Spaceship Example"
 # if something is instance of silverware, is it also an instance of plastic? maybe
 # 
 
-class Movable(arcade.Sprite):
-    def __init__(self, img, init_pos, vel_x, vel_y):
+class Movable(arcade.Sprite): 
+    def __init__(self, img, init_pos, vel_x, vel_y): 
         super().__init__(img, 0.2)
         self.position = init_pos
         self.vel_x = vel_x 
